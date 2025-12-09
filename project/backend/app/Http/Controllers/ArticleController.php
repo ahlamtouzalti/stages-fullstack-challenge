@@ -71,10 +71,36 @@ class ArticleController extends Controller
         if (!$query) {
             return response()->json([]);
         }
+        /**
+ * Recherche insensible à la casse et aux accents dans MySQL sans modifier la table.
+ *
+ * Problématique :
+ *   - Rendre la recherche capable de trouver "café", "CAFÉ", etc. à partir de "cafe".
+ *   - La colonne title peut ne pas avoir la collation utf8mb4_unicode_ci.
+ *   - On ne souhaite pas modifier la table.
+ *
+ * Solution :
+ *   - Utiliser CONVERT(title USING utf8mb4) pour une conversion temporaire.
+ *   - Appliquer COLLATE utf8mb4_unicode_ci pour une comparaison :
+ *       - insensible à la casse
+ *       - insensible aux accents
+ *
+ * Notes :
+ *   - Fonctionne même si la colonne utilise une autre collation.
+ *   - Aucune modification de la table ou des données.
+ *   - MySQL doit supporter utf8mb4_unicode_ci.
+ */
+ 
+/**
+ * Ajouter une requête préparée avec :
+ *   - un placeholder ? 
+ *   - un binding de paramètres
+ *   → sécurise la requête contre les injections SQL.
+ */
 
-        $articles = DB::select(
-            "SELECT * FROM articles WHERE title LIKE '%" . $query . "%'"
-        );
+        $articles = DB::select("
+        SELECT * FROM articles
+        WHERE CONVERT(title USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE ?", ["%$query%"]);
 
         $results = array_map(function ($article) {
             return [
