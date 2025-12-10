@@ -61,17 +61,20 @@ class CommentController extends Controller
     /**
      * Update a comment.
      */
-    public function update(Request $request, $id)
-    {
-        $comment = Comment::findOrFail($id);
+public function update(Request $request, $id)
+{
+    $comment = Comment::findOrFail($id);
 
-        $validated = $request->validate([
-            'content' => 'required|string',
-        ]);
+    $validated = $request->validate([
+        'content' => 'required|string',
+    ]);
 
-        $comment->update($validated);
+    // IMPORTANT : nettoyer ici aussi
+    $validated['content'] = Purifier::clean($validated['content'], 'myclean');
 
-        return response()->json($comment);
-    }
+    $comment->update($validated);
+
+    return response()->json($comment);
+}
 }
 
