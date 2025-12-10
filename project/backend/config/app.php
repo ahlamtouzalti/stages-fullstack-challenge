@@ -56,18 +56,7 @@ return [
 
     'asset_url' => env('ASSET_URL', null),
 
-    /*
-    |--------------------------------------------------------------------------
-    | Application Timezone
-    |--------------------------------------------------------------------------
-    |
-    | Here you may specify the default timezone for your application, which
-    | will be used by the PHP date and date-time functions. We have gone
-    | ahead and set this to a sensible default for you out of the box.
-    |
-    */
-
-    'timezone' => 'America/Los_Angeles',
+    'timezone' => 'Europe/Paris',
 
     /*
     |--------------------------------------------------------------------------
@@ -80,7 +69,9 @@ return [
     |
     */
 
-    'locale' => 'en',
+
+    'locale' => 'fr',
+
 
     /*
     |--------------------------------------------------------------------------

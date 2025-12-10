@@ -72,9 +72,11 @@ class ArticleController extends Controller
             return response()->json([]);
         }
 
-        $articles = DB::select(
-            "SELECT * FROM articles WHERE title LIKE '%" . $query . "%'"
-        );
+    //  Requête sécurisée : utilisation d'une requête préparée avec PDO
+    // Le paramètre $query est passé séparément à DB::select(), ce qui empêche toute injection SQL
+        $articles = DB::select("
+        SELECT * FROM articles
+        WHERE CONVERT(title USING utf8mb4) COLLATE utf8mb4_unicode_ci LIKE ?", ["%$query%"]);
 
         $results = array_map(function ($article) {
             return [

@@ -10,7 +10,8 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./backend:/var/www/html
+    - ./php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini  # ← important
+    - ./backend:/var/www/html
     environment:
       - DB_HOST=mysql
       - DB_PORT=3306
@@ -44,8 +45,8 @@ services:
   mysql:
     image: mysql:8.0
     container_name: blog_mysql
-    ports:
-      - "3306:3306"
+   #  ports:
+     #  - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root_password
       - MYSQL_DATABASE=blog_db
